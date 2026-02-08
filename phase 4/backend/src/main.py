@@ -1,4 +1,6 @@
+import os
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from src.routes import tasks
 from chatbot.routes import chat
 from src.exceptions.handlers import (
@@ -15,6 +17,16 @@ from src.middleware.rate_limit import setup_rate_limiter
 
 # Create FastAPI app
 app = FastAPI(title="Todo App API", version="1.0.0")
+
+# Configure CORS for production deployment
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[frontend_url] if frontend_url else ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Setup rate limiter
 setup_rate_limiter(app)
@@ -35,7 +47,12 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "service": "Todo App API"}
+    return {
+        "status": "healthy",
+        "service": "Todo App API",
+        "version": "1.0.0",
+        "llm_provider": os.getenv("LLM_PROVIDER", "not configured")
+    }
 
 # Create database tables on startup
 @app.on_event("startup")
