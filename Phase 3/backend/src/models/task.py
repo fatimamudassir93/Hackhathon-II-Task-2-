@@ -14,7 +14,7 @@ class Task(TaskBase, table=True):
     __tablename__ = "task"
 
     id: Optional[str] = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
-    user_id: str = Field(foreign_key="user.id")  # Foreign key to Better Auth user table
+    user_id: str = Field(index=True)  # References Better Auth user table (FK in DB, not in ORM)
     title: str
     description: Optional[str] = None
     completed: bool = False

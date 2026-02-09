@@ -16,8 +16,8 @@ class ChatRequest(BaseModel):
 
 class ToolCallInfo(BaseModel):
     tool: str
-    args: dict[str, Any] = {}
-    result: dict[str, Any] = {}
+    args: Optional[dict[str, Any]] = {}
+    result: Optional[dict[str, Any]] = {}
 
 
 class ChatResponse(BaseModel):

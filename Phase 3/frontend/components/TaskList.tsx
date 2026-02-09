@@ -31,12 +31,21 @@ export default function TaskList() {
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
-    const res = await fetch("/api/tasks");
-    if (res.ok) {
-      const data = await res.json();
-      setTasks(data);
+    try {
+      const res = await fetch("/api/tasks");
+      if (res.ok) {
+        const data = await res.json();
+        setTasks(data);
+      } else {
+        console.error("Failed to fetch tasks:", res.status);
+        setTasks([]);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      setTasks([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   useEffect(() => {

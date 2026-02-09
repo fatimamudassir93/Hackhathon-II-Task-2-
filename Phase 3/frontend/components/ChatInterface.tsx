@@ -33,8 +33,10 @@ export default function ChatInterface() {
           timestamp: m.created_at,
         }));
         setMessages(loaded);
-      } catch {
-        // History load failure is non-critical
+      } catch (error) {
+        console.error("Failed to load chat history:", error);
+        // Non-critical failure - continue with empty messages
+        setMessages([]);
       }
     }
     loadHistory();

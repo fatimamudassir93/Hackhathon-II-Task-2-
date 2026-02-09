@@ -120,8 +120,10 @@ class AgentRunner:
 
                 # Parse arguments
                 try:
-                    function_args = json.loads(function_args_str)
-                except json.JSONDecodeError:
+                    function_args = json.loads(function_args_str) if function_args_str else {}
+                    if not isinstance(function_args, dict):
+                        function_args = {}
+                except (json.JSONDecodeError, TypeError):
                     function_args = {}
 
                 # Get tool definition

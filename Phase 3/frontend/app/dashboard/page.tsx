@@ -5,18 +5,23 @@ import Navbar from "@/components/Navbar";
 import TaskList from "@/components/TaskList";
 
 export default async function DashboardPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
 
-  if (!session) {
+    if (!session) {
+      redirect("/sign-in");
+    }
+
+    return (
+      <div className="min-h-screen bg-mesh">
+        <Navbar userName={session.user.name} />
+        <main className="max-w-6xl mx-auto px-4 py-8">
+          <TaskList />
+        </main>
+      </div>
+    );
+  } catch (error) {
+    console.error("Dashboard session error:", error);
     redirect("/sign-in");
   }
-
-  return (
-    <div className="min-h-screen bg-mesh">
-      <Navbar userName={session.user.name} />
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <TaskList />
-      </main>
-    </div>
-  );
 }

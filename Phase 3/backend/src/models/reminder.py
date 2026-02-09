@@ -10,7 +10,7 @@ class Reminder(SQLModel, table=True):
     id: Optional[str] = Field(
         default_factory=lambda: str(uuid.uuid4()), primary_key=True
     )
-    user_id: str = Field(foreign_key="user.id")
+    user_id: str = Field(index=True)
     task_id: str = Field(foreign_key="task.id")
     remind_at: datetime
     status: str = Field(default="active")  # active, cancelled, sent

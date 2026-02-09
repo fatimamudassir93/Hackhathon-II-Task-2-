@@ -44,12 +44,16 @@ class ChatService:
         )
 
         # Convert to Message objects
+        # Skip assistant messages with tool calls to avoid format mismatch
         conversation_history = []
         for msg in recent_messages:
+            # Skip assistant messages that have tool calls (they're reconstructed by the agent)
+            if msg.role == "assistant" and msg.tool_calls:
+                continue
             conversation_history.append(Message(
                 role=msg.role,
                 content=msg.content,
-                tool_calls=json.loads(msg.tool_calls) if msg.tool_calls else None
+                tool_calls=None  # Don't include tool_calls from DB
             ))
 
         # Route to appropriate agent
