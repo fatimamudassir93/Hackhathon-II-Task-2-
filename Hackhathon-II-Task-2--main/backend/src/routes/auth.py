@@ -3,7 +3,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from ..database.session import get_db_session
 from ..schemas.user import UserRegistrationRequest, UserRegistrationResponse, UserLoginRequest, UserLoginResponse
 from ..services.user_service import UserService
-from ..models.user import User
+from ..models.user import User, UserCreate
 from ..utils.validation import validate_email_format, validate_password_strength, validate_user_name
 from ..schemas.responses import TokenResponse, UserResponse
 from datetime import datetime

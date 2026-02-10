@@ -12,8 +12,13 @@ interface User {
   name: string;
 }
 
+interface TokenResponse {
+  access_token: string;
+  token_type: string;
+}
+
 interface AuthResponse {
-  token: string;
+  token: TokenResponse;
   user: User;
 }
 

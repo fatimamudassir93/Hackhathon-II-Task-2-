@@ -36,7 +36,8 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
 
       if (result.data) {
         // Store token and user info
-        apiClient.setToken(result.data.token);
+        // Backend returns token as an object with access_token field
+        apiClient.setToken(result.data.token.access_token);
         localStorage.setItem('user', JSON.stringify(result.data.user));
 
         // Redirect to dashboard
