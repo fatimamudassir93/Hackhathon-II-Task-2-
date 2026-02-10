@@ -7,12 +7,13 @@ import { signIn, signUp, useSession } from "@/lib/auth-client";
 
 export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   const router = useRouter();
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending, error: sessionError } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionCheckTimedOut, setSessionCheckTimedOut] = useState(false);
 
   const isSignUp = mode === "sign-up";
 
@@ -23,8 +24,19 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
     }
   }, [session, isPending, router]);
 
-  // Show loading while checking session
-  if (isPending) {
+  // Add timeout for session check
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (isPending) {
+        setSessionCheckTimedOut(true);
+      }
+    }, 3000); // 3 second timeout
+
+    return () => clearTimeout(timeout);
+  }, [isPending]);
+
+  // Show loading while checking session (with timeout)
+  if (isPending && !sessionCheckTimedOut) {
     return (
       <div className="w-full max-w-md animate-scale-in">
         <div className="text-center">
