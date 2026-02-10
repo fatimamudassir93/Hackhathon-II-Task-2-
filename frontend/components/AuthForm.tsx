@@ -52,6 +52,12 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
 
       // Force a small delay before redirect to ensure session is set
       await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Store user info in localStorage for dashboard
+      if (result.user) {
+        localStorage.setItem("user", JSON.stringify(result.user));
+      }
+
       router.push("/dashboard");
       router.refresh();
     } catch (err) {
