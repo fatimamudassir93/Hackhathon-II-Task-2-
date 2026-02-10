@@ -32,32 +32,42 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
     setLoading(true);
 
     try {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timeout")), 10000)
+      );
+
       if (isSignUp) {
-        const { error: authError } = await signUp.email({
-          name,
-          email,
-          password,
-        });
-        if (authError) {
-          setError(authError.message || "Sign up failed");
+        const result = await Promise.race([
+          signUp.email({ name, email, password }),
+          timeoutPromise
+        ]) as any;
+
+        if (result.error) {
+          setError(result.error.message || "Sign up failed");
           setLoading(false);
           return;
         }
       } else {
-        const { error: authError } = await signIn.email({
-          email,
-          password,
-        });
-        if (authError) {
-          setError(authError.message || "Sign in failed");
+        const result = await Promise.race([
+          signIn.email({ email, password }),
+          timeoutPromise
+        ]) as any;
+
+        if (result.error) {
+          setError(result.error.message || "Sign in failed");
           setLoading(false);
           return;
         }
       }
+
+      // Force a small delay before redirect to ensure session is set
+      await new Promise(resolve => setTimeout(resolve, 500));
       router.push("/dashboard");
       router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      console.error("Auth error:", err);
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setLoading(false);
     }
   }
