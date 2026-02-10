@@ -1,30 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { signIn, signUp, useSession } from "@/lib/auth-client";
+import { signIn, signUp } from "@/lib/auth-client";
 
 export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
   const router = useRouter();
-  const { data: session, isPending, error: sessionError } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sessionCheckTimedOut, setSessionCheckTimedOut] = useState(false);
 
   const isSignUp = mode === "sign-up";
-
-  // Redirect if already authenticated (non-blocking)
-  useEffect(() => {
-    if (!isPending && session) {
-      router.push("/dashboard");
-    }
-  }, [session, isPending, router]);
-
-  // Don't block rendering - show form immediately and redirect in background if needed
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
