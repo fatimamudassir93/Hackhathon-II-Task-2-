@@ -26,11 +26,13 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
         setTimeout(() => reject(new Error("Request timeout")), 10000)
       );
 
+      let result: any;
+
       if (isSignUp) {
-        const result = await Promise.race([
+        result = await Promise.race([
           signUp.email({ name, email, password }),
           timeoutPromise
-        ]) as any;
+        ]);
 
         if (result.error) {
           setError(result.error.message || "Sign up failed");
@@ -38,10 +40,10 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
           return;
         }
       } else {
-        const result = await Promise.race([
+        result = await Promise.race([
           signIn.email({ email, password }),
           timeoutPromise
-        ]) as any;
+        ]);
 
         if (result.error) {
           setError(result.error.message || "Sign in failed");
@@ -54,7 +56,7 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // Store user info in localStorage for dashboard
-      if (result.user) {
+      if (result?.user) {
         localStorage.setItem("user", JSON.stringify(result.user));
       }
 
