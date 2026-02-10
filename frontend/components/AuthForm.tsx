@@ -17,40 +17,14 @@ export default function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
 
   const isSignUp = mode === "sign-up";
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (non-blocking)
   useEffect(() => {
     if (!isPending && session) {
       router.push("/dashboard");
     }
   }, [session, isPending, router]);
 
-  // Add timeout for session check
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (isPending) {
-        setSessionCheckTimedOut(true);
-      }
-    }, 3000); // 3 second timeout
-
-    return () => clearTimeout(timeout);
-  }, [isPending]);
-
-  // Show loading while checking session (with timeout)
-  if (isPending && !sessionCheckTimedOut) {
-    return (
-      <div className="w-full max-w-md animate-scale-in">
-        <div className="text-center">
-          <div className="w-12 h-12 rounded-full border-2 border-purple-500/30 border-t-purple-500 animate-spin-slow mx-auto mb-4" />
-          <p className="text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render form if already authenticated
-  if (session) {
-    return null;
-  }
+  // Don't block rendering - show form immediately and redirect in background if needed
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
