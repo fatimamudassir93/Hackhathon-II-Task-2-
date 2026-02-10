@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:fatima7860-phase3-backend.hf.space)",
+      "Bash(vercel:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git restore frontend/)",
+      "Bash(git checkout HEAD -- frontend/)",
+      "WebFetch(domain:frontend-snowy-gamma.vercel.app)",
+      "Bash(git add components/AuthForm.tsx)",
+      "Bash(git add:*)",
+      "WebFetch(domain:todo-app-phase3-frontend.vercel.app)"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "todo-app-root",
+  "private": true,
+  "dependencies": {
+    "next": "^14.2.21"
+  }
+}
